@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page import="model.*" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -127,90 +128,43 @@
     </style>
 </head>
 <body>
-<%
-    // 세션 체크
-    AccountDTO loginUser = (AccountDTO) session.getAttribute("loginUser");
-    if (loginUser == null) {
-        response.sendRedirect("login.jsp");
-        return;
-    }
-
-    // 결과 데이터 가져오기
-    String testType = (String) session.getAttribute("testType");
-    String level = (String) session.getAttribute("testLevel");
-    String sectorStr = (String) session.getAttribute("testSector");
-    Integer totalQuestions = (Integer) session.getAttribute("totalQuestions");
-    Integer correctCount = (Integer) session.getAttribute("correctCount");
-    Integer wrongCount = (Integer) session.getAttribute("wrongCount");
-
-    if (testType == null || !testType.equals("wrong_review") || 
-        totalQuestions == null || correctCount == null) {
-        response.sendRedirect("main.jsp");
-        return;
-    }
-
-    // 점수 계산
-    double percentage = (totalQuestions > 0) ? 
-        ((double) correctCount / totalQuestions * 100) : 0;
-    
-    // 메시지 결정
-    String resultIcon = "";
-    String resultMessage = "";
-    
-    if (percentage == 100) {
-        resultIcon = "🎉";
-        resultMessage = "완벽합니다! 모든 문제를 맞췄어요!";
-    } else if (percentage >= 80) {
-        resultIcon = "😊";
-        resultMessage = "훌륭해요! 거의 다 맞췄네요!";
-    } else if (percentage >= 60) {
-        resultIcon = "👍";
-        resultMessage = "좋아요! 조금만 더 연습하면 완벽할 거예요!";
-    } else if (percentage >= 40) {
-        resultIcon = "💪";
-        resultMessage = "괜찮아요! 계속 복습하면 실력이 늘 거예요!";
-    } else {
-        resultIcon = "📚";
-        resultMessage = "다시 한번 복습이 필요해요. 포기하지 마세요!";
-    }
-%>
 
 <div class="container">
     <h1>🔄 복습 테스트 결과</h1>
-    
-    <div class="result-icon"><%= resultIcon %></div>
-    
+
+    <div class="result-icon">${resultIcon}</div>
+
     <div class="score-display">
-        <%= String.format("%.0f", percentage) %>점
+        <fmt:formatNumber value="${resultPercentage}" maxFractionDigits="0"/>점
     </div>
-    
+
     <div class="percentage">
-        ( <%= correctCount %> / <%= totalQuestions %> 문제 정답 )
+        ( ${correctCount} / ${totalQuestions} 문제 정답 )
     </div>
-    
+
     <div class="score-details">
         <div class="score-box correct-box">
             <h3>정답</h3>
-            <div class="number"><%= correctCount %></div>
+            <div class="number">${correctCount}</div>
         </div>
         <div class="score-box wrong-box">
             <h3>오답</h3>
-            <div class="number"><%= wrongCount %></div>
+            <div class="number">${wrongCount}</div>
         </div>
     </div>
-    
+
     <div class="message">
-        <%= resultMessage %>
+        ${resultMessage}
     </div>
-    
+
     <div class="btn-container">
-        <% if (wrongCount > 0) { %>
-            <a href="WrongKanjiStudy.jsp?level=<%= level %><%= (sectorStr != null ? "&sector=" + sectorStr : "") %>" 
+        <c:if test="${wrongCount > 0}">
+            <a href="WrongKanjiStudyCon.do?level=${level}<c:if test="${not empty sectorStr}">&sector=${sectorStr}</c:if>"
                class="btn btn-danger">
                 🔄 다시 복습하기
             </a>
-        <% } %>
-        <a href="WrongKanjiTest.jsp?level=<%= level %><%= (sectorStr != null ? "&sector=" + sectorStr : "") %>" 
+        </c:if>
+        <a href="WrongKanjiTestCon.do?level=${level}<c:if test="${not empty sectorStr}">&sector=${sectorStr}</c:if>"
            class="btn btn-primary">
             📝 다시 테스트
         </a>
@@ -219,16 +173,6 @@
         </a>
     </div>
 </div>
-
-<%
-    // 세션 데이터 정리
-    session.removeAttribute("testType");
-    session.removeAttribute("testLevel");
-    session.removeAttribute("testSector");
-    session.removeAttribute("totalQuestions");
-    session.removeAttribute("correctCount");
-    session.removeAttribute("wrongCount");
-%>
 
 </body>
 </html>

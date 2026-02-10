@@ -347,7 +347,7 @@
                 <% } %>
             </a>
             
-            <a href="WrongKanjiTest.jsp" class="menu-card review">
+            <a href="WrongKanjiTestCon.do" class="menu-card review">
                 <h3>🎯 복습 테스트</h3>
                 <p>오답 중심으로 복습 가능!</p>
                 <% if (totalStudied > 0) { %>
@@ -370,7 +370,7 @@
                     <div class="modal-levels">
                         <% for (int i = 0; i < 5; i++) {
                             if (wrongPerLevel[i] > 0) { %>
-                                <a href="WrongKanjiStudy.jsp?level=<%= menuLevels[i] %>" class="modal-level-btn">
+                                <a href="WrongKanjiStudyCon.do?level=<%= menuLevels[i] %>" class="modal-level-btn">
                                     <span class="lv-name"><%= menuLevels[i] %></span>
                                     <span class="lv-cnt"><%= wrongPerLevel[i] %>개</span>
                                 </a>

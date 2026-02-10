@@ -143,7 +143,7 @@
             
             <!-- 마지막 한자일 때 테스트 버튼 -->
             <% if (currentIndex == totalInSector - 1) { %>
-                <button class="test-btn" onclick="location.href='Test_main.jsp?level=<%= level %>&sector=<%= sector %>'">
+                <button class="test-btn" onclick="location.href='TestMainCon.do?level=<%= level %>&sector=<%= sector %>'">
                     🎯 테스트 시작하기
                 </button>
             <% } %>
