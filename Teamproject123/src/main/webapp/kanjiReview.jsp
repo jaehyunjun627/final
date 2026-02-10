@@ -196,7 +196,7 @@
 
         <!-- 마지막 페이지에서 테스트 시작 버튼 -->
         <% if (isLastPage) { %>
-            <button class="test-btn" onclick="location.href='Test_main.jsp?level=<%= level %>&sector=<%= sector %>'">
+            <button class="test-btn" onclick="location.href='TestMainCon.do?level=<%= level %>&sector=<%= sector %>'">
                 테스트 시작하기
             </button>
         <% } %>
